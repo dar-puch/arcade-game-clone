@@ -29,21 +29,30 @@ Enemy.prototype.render = function() {
 
 class Player {
   constructor() {
-    this.x = 205;
-    this.y = 415;
     this.sprite = 'images/char-boy.png';
   }
 
-  update() { ///cos zamiast playet (this i s undefined)
-allEnemies.forEach(function(enemy){
-  if (enemy.x >= (player.x-50) && enemy.x <= (player.x+50) && enemy.y >= (player.y-42) && enemy.y <= (player.y+42)) {
-    console.log('collision');
-  }
-})
-  }
+checkCollisions(pl) {
+  allEnemies.forEach(function(enemy){
+    if (enemy.x >= (pl.x-50) && enemy.x <= (pl.x+50) && enemy.y >= (pl.y-42) && enemy.y <= (pl.y+42)) {
+      pl.startPos();
+    }
+  });
+} //end checkCollisions
+
+startPos(){
+this.x = 205;
+this.y = 415;
+}
+
+  update() {
+this.checkCollisions(player);
+console.log(player.x, player.y);
+} //end update
+
   render() {
 ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-  }
+} //end render
 
   handleInput(key){
     switch(key) {
@@ -53,19 +62,20 @@ ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
         this.y = 0;
       }
       break;
+
       case 'down':
       this.y = this.y + 83;
       if (this.y >= 415) {
         this.y = 415;
       }
       break;
+
       case 'left':
       this.x = this.x - 101;
         if (this.x <= 0) {
           this.x = 0;
         }
-        update();
-        break;
+      break;
       case 'right':
       this.x = this.x + 101;
       if (this.x >= 404) {
@@ -73,7 +83,7 @@ ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
       }
     }
 
-      }
+  } //end handleInput
 
 }//end Player
 
@@ -86,7 +96,7 @@ const allEnemies = [enemy1, enemy2, enemy3];
 // Place the player object in a variable called player
 
 const player = new Player();
-
+player.startPos();
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
