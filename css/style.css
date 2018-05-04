@@ -1,3 +1,31 @@
 body {
     text-align: center;
+    position: relative;
+}
+#win {
+  width: 505px;
+  height: 200px;
+position: absolute;
+top: 40%;
+left: 50%;
+transform: translate(-50%, 0);
+background-color: black
+}
+#win h1 {
+
+  width: 100%;
+  font-family: monospace;
+  color: white;
+  font-size: 4em;
+}
+.hidden {
+    display: none;
+}
+#ok {
+  padding: 10px 30px;
+  background: white;
+  color: black;
+  font-family: monospace;
+  font-size: 2em;
+  border: 1px solid white;
 }
