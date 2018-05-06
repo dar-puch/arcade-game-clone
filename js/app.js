@@ -1,8 +1,9 @@
+
 // Enemies our player must avoid
 let Enemy = function() {
     this.sprite = 'images/enemy-bug.png';
     this.x = Math.floor(Math.random() * 250) - 300;
-    this.speed = Math.floor(Math.random() * 190) + 20; //Math.floor(Math.random() * 290) + 90
+    this.speed = Math.floor(Math.random() * 250) + 50;
     this.y = this.chooseRow();
 };
 
@@ -25,12 +26,15 @@ Enemy.prototype.update = function(dt) {
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
-Enemy.prototype.chooseRow = function(){
+Enemy.prototype.chooseRow = function(){ //put enemy on random row
   const rows = [60,143,230];
   const random = Math.floor(Math.random() * 3);
   return rows[random];
 }
-
+Enemy.prototype.changeSpeed = function(factor1, factor2){
+  this.speed = Math.floor(Math.random() * (250 + factor1)) + (50 + factor2);
+  console.log('thisSpeed: ' + this.speed);
+}
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
@@ -48,6 +52,11 @@ checkCollisions(pl) {
     if (enemy.x >= (pl.x-50) && enemy.x <= (pl.x+50) && enemy.y >= (pl.y-42) && enemy.y <= (pl.y+42)) {
       pl.startPos();
       pl.collisionCount++;
+      panel.lives--;
+      panel.update();
+      if (panel.lives === 0) {
+        document.getElementById('lose').classList.remove('hidden');
+      }
     }
   });
 } //end checkCollisions
@@ -61,18 +70,20 @@ this.y = 415;
   update() {
 this.checkCollisions(player);
 this.checkWin();
-
-
 } //end update
 
 checkWin() {
+  //this.winCount++;
   if (this.y === 0) {
-  console.log('win!');
     this.startPos();
-  this.winCount++;
-  document.getElementById('win').classList.remove('hidden');
+  panel.level++;
+  panel.update();
+  allEnemies.forEach(function(enemy){
+    enemy.changeSpeed(50, 50);
+  })
+
   }
-}
+} //end checkWin
 
   render() {
 ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -81,50 +92,60 @@ ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   handleInput(key){
     switch(key) {
       case 'up':
-      console.log('this.y before: ' + this.y);
       this.y = this.y - 83;
       (this.y <= -1) ? this.y = 0 : this.movesCount++;
-      console.log('movesCount: ' + this.movesCount);
-      console.log('this.y: ' + this.y);
       break;
 
       case 'down':
-      console.log('this.y before: ' + this.y);
       this.y = this.y + 83;
       (this.y >= 416) ? this.y = 415 : this.movesCount++;
-      console.log('movesCount: ' + this.movesCount);
-      console.log('this.y: ' + this.y);
       break;
 
       case 'left':
-      console.log('this.x before: ' + this.x);
       this.x = this.x - 101;
       (this.x <= 0) ? this.x = 0 : this.movesCount++;
-        console.log('movesCount: ' + this.movesCount);
-          console.log('this.x: ' + this.x);
       break;
 
       case 'right':
-      console.log('this.x before: ' + this.x);
       this.x = this.x + 101;
       (this.x >= 408) ? this.x = 404 : this.movesCount++;
-        console.log('movesCount: ' + this.movesCount);
-          console.log('this.x: ' + this.x);
-
     }
 
   } //end handleInput
 
 }//end Player
 
+class Panel {
+  constructor(lives) {
+    this.fullLives = lives;
+    this.lives = lives;
+    this.level = 1;
+  }
+
+  update() {
+    let heartsList = document.getElementById('hearts');
+    while (heartsList.firstChild) {
+    heartsList.firstChild.remove();
+}
+    for (let i=0; i < this.lives; i++) {
+      heartsList.insertAdjacentHTML('afterbegin', '<li><img src="images/Heart-min.png" /></li>');
+    }
+    let levelNum = document.getElementById('level-num');
+    levelNum.innerText = this.level;
+  }//end update
+} //end Panel
+
+
 
 const enemy1 = new Enemy();
 const enemy2 = new Enemy();
 const enemy3 = new Enemy();
-const allEnemies = [enemy1, enemy2, enemy3];
+const enemy4 = new Enemy();
+const allEnemies = [enemy1, enemy2, enemy3, enemy4];
 
 const player = new Player();
-
+const panel = new Panel(3);
+panel.update();
 player.startPos();
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -139,6 +160,14 @@ document.addEventListener('keyup', function(e) {
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
-document.getElementById('ok').addEventListener('click', function() {
-  document.getElementById('win').classList.add('hidden');
+document.getElementById('btn-again').addEventListener('click', function() {
+  document.getElementById('lose').classList.add('hidden');
+  player.startPos();
+  panel.lives = panel.fullLives;
+  panel.level = 1;
+  panel.update();
+  allEnemies.forEach(function(enemy){
+    enemy.changeSpeed(0, 0);
+  })
+
 })

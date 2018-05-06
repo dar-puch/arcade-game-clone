@@ -1,18 +1,18 @@
 body {
     text-align: center;
     position: relative;
+    width: 505px;
+    margin: 0 auto;
 }
-#win {
-  width: 505px;
+.overlay {
+  width: 100%;
   height: 200px;
 position: absolute;
 top: 40%;
-left: 50%;
-transform: translate(-50%, 0);
+left: 0;
 background-color: black
 }
-#win h1 {
-
+.overlay h1 {
   width: 100%;
   font-family: monospace;
   color: white;
@@ -21,11 +21,30 @@ background-color: black
 .hidden {
     display: none;
 }
-#ok {
+button {
   padding: 10px 30px;
   background: white;
   color: black;
   font-family: monospace;
   font-size: 2em;
   border: 1px solid white;
+}
+
+button:hover {
+  background: black;
+  color: white;
+
+}
+.panel {
+text-align: left;
+}
+#hearts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+}
+
+#hearts li {
+    display: inline-block;
 }
