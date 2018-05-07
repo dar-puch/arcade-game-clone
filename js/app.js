@@ -34,10 +34,8 @@ Enemy.prototype.chooseRow = function(){ //put enemy on random row
   return rows[random];
 }
 Enemy.prototype.changeSpeed = function(){
-  this.factor = this.factor + 50;
-
+  this.factor += 50;
   this.speed = Math.floor(Math.random() * 250) + this.factor;
-  console.log('thisSpeed: ' + this.speed);
 }
 // Now write your own player class
 // This class requires an update(), render() and
@@ -137,6 +135,7 @@ class Panel {
     let levelNum = document.getElementById('level-num');
     levelNum.innerText = this.level;
   }//end update
+
 } //end Panel
 
 
