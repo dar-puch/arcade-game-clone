@@ -3,8 +3,10 @@
 let Enemy = function() {
     this.sprite = 'images/enemy-bug.png';
     this.x = Math.floor(Math.random() * 250) - 300;
-    this.speed = Math.floor(Math.random() * 250) + 50;
+    this.factor = 0; //increases speed
+    this.speed = Math.floor(Math.random() * 250) + this.factor;
     this.y = this.chooseRow();
+
 };
 
 
@@ -31,8 +33,10 @@ Enemy.prototype.chooseRow = function(){ //put enemy on random row
   const random = Math.floor(Math.random() * 3);
   return rows[random];
 }
-Enemy.prototype.changeSpeed = function(factor1, factor2){
-  this.speed = Math.floor(Math.random() * (250 + factor1)) + (50 + factor2);
+Enemy.prototype.changeSpeed = function(){
+  this.factor = this.factor + 50;
+
+  this.speed = Math.floor(Math.random() * 250) + this.factor;
   console.log('thisSpeed: ' + this.speed);
 }
 // Now write your own player class
@@ -79,7 +83,7 @@ checkWin() {
   panel.level++;
   panel.update();
   allEnemies.forEach(function(enemy){
-    enemy.changeSpeed(50, 50);
+    enemy.changeSpeed();
   })
 
   }
@@ -167,7 +171,8 @@ document.getElementById('btn-again').addEventListener('click', function() {
   panel.level = 1;
   panel.update();
   allEnemies.forEach(function(enemy){
-    enemy.changeSpeed(0, 0);
+    enemy.factor = 0;
+    enemy.changeSpeed();
   })
 
 })
