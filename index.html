@@ -2,10 +2,12 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Effective JavaScript: Frogger</title>
+    <title>Wild Bugs</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <audio id="audio-sounds" src="sounds/NFF-throw-03.mp3"></audio>
+    <audio loop id="audio-bcg" src="sounds/POL-snowy-hill-short.mp3"></audio>
   <div id="lose" class="hidden overlay">
     <h1>Out of lives!</h1>
     <button id="btn-again">Try again</button>
@@ -13,7 +15,6 @@
   <h1 class="title">Wild Bugs</h1>
   <section class="panel">
   <ul id="hearts">
-
   </ul>
   <div class="level">
     Level: <span id='level-num'>1</span>
@@ -22,6 +23,9 @@
     <script src="js/resources.js"></script>
     <script src="js/app.js"></script>
     <script src="js/engine.js"></script>
-
+<div>
+Background Music by <a href = "http://www.PlayOnLoop.com">PlayOnLoop.com</a><br />
+Licensed under Creative Commons By Attribution 4.0<br />
+Other sounds by <a href="http://www.noiseforfun.com">NoiseForFun.com</a> under CC-BY-ND 3.0 Attribution </div>
 </body>
 </html>

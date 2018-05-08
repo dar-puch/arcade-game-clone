@@ -52,11 +52,13 @@ class Player {
 checkCollisions(pl) {
   allEnemies.forEach(function(enemy){
     if (enemy.x >= (pl.x-50) && enemy.x <= (pl.x+50) && enemy.y >= (pl.y-42) && enemy.y <= (pl.y+42)) {
+      audioSounds.play('sounds/NFF-throw-03.mp3');
       pl.startPos();
       pl.collisionCount++;
       panel.lives--;
       panel.update();
       if (panel.lives === 0) {
+        audioSounds.play('sounds/NFF-death-bell.mp3');
         document.getElementById('lose').classList.remove('hidden');
       }
     }
@@ -77,6 +79,7 @@ this.checkWin();
 checkWin() {
   //this.winCount++;
   if (this.y === 0) {
+    audioSounds.play('sounds/NFF-coin-04.mp3');
     this.startPos();
   panel.level++;
   panel.update();
@@ -138,7 +141,23 @@ class Panel {
 
 } //end Panel
 
-
+class Audio {
+  constructor(id) {
+  this.audioElement = document.getElementById(id);
+  this.muted = false;
+  }
+  play(tune) {
+    this.audioElement.src = tune;
+    this.audioElement.play();
+    console.log('should be sound ' + tune);
+  }
+  pause() {
+    this.audioElement.pause()
+  };
+  mute() {
+    this.audioElement.muted = true;
+  }
+}
 
 const enemy1 = new Enemy();
 const enemy2 = new Enemy();
@@ -148,6 +167,9 @@ const allEnemies = [enemy1, enemy2, enemy3, enemy4];
 
 const player = new Player();
 const panel = new Panel(3);
+const audioSounds = new Audio('audio-sounds');
+const audioBcg = new Audio('audio-bcg');
+audioBcg.play('sounds/POL-snowy-hill-short.mp3');
 panel.update();
 player.startPos();
 // This listens for key presses and sends the keys to your
@@ -165,6 +187,7 @@ document.addEventListener('keyup', function(e) {
 
 document.getElementById('btn-again').addEventListener('click', function() {
   document.getElementById('lose').classList.add('hidden');
+  audioSounds.pause();
   player.startPos();
   panel.lives = panel.fullLives;
   panel.level = 1;
@@ -175,3 +198,14 @@ document.getElementById('btn-again').addEventListener('click', function() {
   })
 
 })
+
+/*
+audio = document.getElementById("audio");
+audio.src = "audio/wrong.mp3";
+audio.play();
+audio.pause();
+document.querySelector(".sound").addEventListener("click", function() {
+  let soundClassList = document.querySelector(".sound").classList;
+  soundClassList.toggle("muted");
+  soundClassList.contains("muted") ? audio.muted = true : audio.muted = false;
+});*/
