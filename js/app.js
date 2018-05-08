@@ -4,7 +4,7 @@ let Enemy = function() {
     this.sprite = 'images/enemy-bug.png';
     this.x = Math.floor(Math.random() * 250) - 300;
     this.factor = 0; //increases speed
-    this.speed = Math.floor(Math.random() * 250) + this.factor;
+    this.speed = Math.floor(Math.random() * 30) + this.factor; //250
     this.y = this.chooseRow();
 
 };
@@ -66,7 +66,7 @@ checkCollisions(pl) {
 } //end checkCollisions
 
 startPos(){
-this.x = 205;
+this.x = 202;
 this.y = 415;
 }
 
@@ -81,6 +81,7 @@ checkWin() {
   if (this.y === 0) {
     audioSounds.play('sounds/NFF-coin-04.mp3');
     this.startPos();
+    rock.update();
   panel.level++;
   panel.update();
   allEnemies.forEach(function(enemy){
@@ -97,25 +98,32 @@ ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   handleInput(key){
     switch(key) {
       case 'up':
+      if ((this.y - 103) !== rock.y || this.x !== rock.x) {
       this.y = this.y - 83;
       (this.y <= -1) ? this.y = 0 : this.movesCount++;
+      }
       break;
 
       case 'down':
+      if ((this.y + 63) !== rock.y || this.x !== rock.x) {
       this.y = this.y + 83;
       (this.y >= 416) ? this.y = 415 : this.movesCount++;
+    }
       break;
 
       case 'left':
+        if ((this.y-20) !== rock.y || (this.x - 101) !== rock.x) {
       this.x = this.x - 101;
       (this.x <= 0) ? this.x = 0 : this.movesCount++;
+    }
       break;
 
       case 'right':
+        if ((this.x + 101) !== rock.x || (this.y-20) !== rock.y) {
       this.x = this.x + 101;
       (this.x >= 408) ? this.x = 404 : this.movesCount++;
     }
-
+}
   } //end handleInput
 
 }//end Player
@@ -149,7 +157,6 @@ class Audio {
   play(tune) {
     this.audioElement.src = tune;
     this.audioElement.play();
-    console.log('should be sound ' + tune);
   }
   pause() {
     this.audioElement.pause()
@@ -157,18 +164,54 @@ class Audio {
   mute() {
     this.audioElement.muted = true;
   }
+
+  unmute() {
+    this.audioElement.muted = false;
+  }
+} // end Audio
+
+class Rock {
+  constructor() {
+    this.sprite = 'images/Rock.png';
+    this.x = 101 * (Math.floor(Math.random() * 5 ));
+    this.y = -20 + 83 * (Math.floor(Math.random() * 4 ));
+  }
+render() {
+  ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
 
-const enemy1 = new Enemy();
-const enemy2 = new Enemy();
-const enemy3 = new Enemy();
-const enemy4 = new Enemy();
-const allEnemies = [enemy1, enemy2, enemy3, enemy4];
+update(){
+  this.x = 101 * (Math.floor(Math.random() * 5 ));
+  this.y = -20 + 83 * (Math.floor(Math.random() * 4 ));
+}
+
+}
+const allEnemies = [];
+function instEnemies(howMany) { //function to instantiate enemies and write to array
+  for (let i=0; i <= howMany; i++) {
+    allEnemies[i] = new Enemy();
+  }
+}
+
+const allRocks = []
+function instRocks(howMany) { //function to instantiate rocks and write to array
+  for (let i=0; i <= howMany; i++) {
+    allRocks[i] = new Rock();
+  }
+}
+
+allRocks.forEach(function(rock) {
+    rock.render();
+});
+instRocks(4);
+instEnemies(3);
+
 
 const player = new Player();
 const panel = new Panel(3);
 const audioSounds = new Audio('audio-sounds');
 const audioBcg = new Audio('audio-bcg');
+
 audioBcg.play('sounds/POL-snowy-hill-short.mp3');
 panel.update();
 player.startPos();
@@ -197,6 +240,33 @@ document.getElementById('btn-again').addEventListener('click', function() {
     enemy.changeSpeed();
   })
 
+})
+//sounds on-off
+document.getElementById('music').addEventListener('click', function() {
+  let element = this;
+  if (audioBcg.muted === false) {
+  element.src='images/music-note-mute.png';
+  audioBcg.mute();
+  audioBcg.muted = true;
+  }
+  else {
+    element.src='images/music-note.png';
+    audioBcg.unmute();
+    audioBcg.muted = false;
+  }
+});
+document.getElementById('sounds').addEventListener('click', function() {
+  let element = this;
+  if (audioSounds.muted === false) {
+  element.src='images/speaker-mute.png';
+  audioSounds.mute();
+  audioSounds.muted = true;
+  }
+  else {
+    element.src='images/speaker.png';
+    audioSounds.unmute();
+    audioSounds.muted = false;
+  }
 })
 
 /*

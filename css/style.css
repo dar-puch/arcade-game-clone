@@ -76,3 +76,11 @@ width: 505px;
 #hearts li {
     display: inline-block;
 }
+.row {
+  display: flex;
+  justify-content: space-between;
+}
+.sound-ctrl img {
+  padding: 10px;
+  cursor: pointer;
+}
