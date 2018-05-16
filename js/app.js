@@ -81,7 +81,6 @@ checkWin() {
   if (this.y === 0) {
     audioSounds.play('sounds/NFF-coin-04.mp3');
     this.startPos();
-    rock.update();
   panel.level++;
   panel.update();
   allEnemies.forEach(function(enemy){
@@ -98,31 +97,29 @@ ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   handleInput(key){
     switch(key) {
       case 'up':
-      if ((this.y - 103) !== rock.y || this.x !== rock.x) {
       this.y = this.y - 83;
       (this.y <= -1) ? this.y = 0 : this.movesCount++;
-      }
+
       break;
 
       case 'down':
-      if ((this.y + 63) !== rock.y || this.x !== rock.x) {
       this.y = this.y + 83;
       (this.y >= 416) ? this.y = 415 : this.movesCount++;
-    }
+
       break;
 
       case 'left':
-        if ((this.y-20) !== rock.y || (this.x - 101) !== rock.x) {
+
       this.x = this.x - 101;
       (this.x <= 0) ? this.x = 0 : this.movesCount++;
-    }
+
       break;
 
       case 'right':
-        if ((this.x + 101) !== rock.x || (this.y-20) !== rock.y) {
+
       this.x = this.x + 101;
       (this.x >= 408) ? this.x = 404 : this.movesCount++;
-    }
+
 }
   } //end handleInput
 
@@ -170,22 +167,7 @@ class Audio {
   }
 } // end Audio
 
-class Rock {
-  constructor() {
-    this.sprite = 'images/Rock.png';
-    this.x = 101 * (Math.floor(Math.random() * 5 ));
-    this.y = -20 + 83 * (Math.floor(Math.random() * 4 ));
-  }
-render() {
-  ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
 
-update(){
-  this.x = 101 * (Math.floor(Math.random() * 5 ));
-  this.y = -20 + 83 * (Math.floor(Math.random() * 4 ));
-}
-
-}
 const allEnemies = [];
 function instEnemies(howMany) { //function to instantiate enemies and write to array
   for (let i=0; i <= howMany; i++) {
@@ -193,17 +175,7 @@ function instEnemies(howMany) { //function to instantiate enemies and write to a
   }
 }
 
-const allRocks = []
-function instRocks(howMany) { //function to instantiate rocks and write to array
-  for (let i=0; i <= howMany; i++) {
-    allRocks[i] = new Rock();
-  }
-}
 
-allRocks.forEach(function(rock) {
-    rock.render();
-});
-instRocks(4);
 instEnemies(3);
 
 
