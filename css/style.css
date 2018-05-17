@@ -25,7 +25,12 @@ position: absolute;
 top: 40%;
 left: 50%;
 transform: translate(-50%,0);
-background-color: #CB3C00;
+}
+.win {
+  background-color: #CB3C00;
+}
+.lose {
+  background-color: #000;
 }
 .overlay h1 {
   width: 100%;

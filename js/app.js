@@ -17,7 +17,7 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     this.x = this.x +(this.speed * dt);
-    if (this.x > 505){
+    if (this.x > 505){ //go to start when out of canvas but change the row
         this.x = -50;
         this.y = this.chooseRow();
 };
@@ -59,7 +59,7 @@ checkCollisions(pl) {
       panel.update();
       if (panel.lives === 0) {
         audioSounds.play('sounds/NFF-death-bell.mp3');
-        document.getElementById('lose').classList.remove('hidden');
+        show('lose');
       }
     }
   });
@@ -77,7 +77,6 @@ this.checkWin();
 } //end update
 
 checkWin() {
-  //this.winCount++;
   if (this.y === 0) {
     audioSounds.play('sounds/NFF-coin-04.mp3');
     this.startPos();
@@ -99,24 +98,19 @@ ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
       case 'up':
       this.y = this.y - 83;
       (this.y <= -1) ? this.y = 0 : this.movesCount++;
-
       break;
 
       case 'down':
       this.y = this.y + 83;
       (this.y >= 416) ? this.y = 415 : this.movesCount++;
-
       break;
 
       case 'left':
-
       this.x = this.x - 101;
       (this.x <= 0) ? this.x = 0 : this.movesCount++;
-
       break;
 
       case 'right':
-
       this.x = this.x + 101;
       (this.x >= 408) ? this.x = 404 : this.movesCount++;
 
@@ -145,6 +139,58 @@ class Panel {
   }//end update
 
 } //end Panel
+
+function show(result) {
+  const element = document.getElementById('end');
+
+   if (result === 'win') {
+
+    element.getElementsByTagName('h1')[0].innerText = 'Congratulations! You have reached end of the game';
+   }
+   else if (result === 'lose') {
+     element.getElementsByTagName('h1')[0].innerText = 'Out of lives!';
+     element.classList.add('lose');
+   }
+
+console.log("document.getElementById('end').getElementsByTagName('h1')[0].innerText:" + document.getElementById('end').getElementsByTagName('h1')[0].innerText);
+   text = 'Congratulations! You have reached end of the game';
+   console.log('result: ' + result);
+   element.classList.remove('hidden');
+}
+
+class Overlay {
+  constructor() {
+    this.element = document.getElementById('end');
+    this.text = this.element.getElementsByTagName('h1').innerText;
+
+  }
+
+  show(result) {
+     if (result === 'win') {
+       this.text = 'Congratulations! You have reached end of the game';
+     }
+     else if (result === 'lose') {
+       this.text = 'Out of hives!';
+     }
+     console.log('this.text:' + this.text);
+     console.log('this.text:' + this.text);
+     this.text = 'Congratulations! You have reached end of the game';
+     console.log('result: ' + result);
+     this.element.classList.remove('hidden');
+  }
+
+  hide() {
+    this.element.classList.add('hidden');
+  }
+}
+
+class Game {
+
+pause() {
+
+}
+
+}
 
 class Audio {
   constructor(id) {
@@ -183,6 +229,7 @@ const player = new Player();
 const panel = new Panel(3);
 const audioSounds = new Audio('audio-sounds');
 const audioBcg = new Audio('audio-bcg');
+const overlay = new Overlay();
 
 audioBcg.play('sounds/POL-snowy-hill-short.mp3');
 panel.update();
@@ -201,7 +248,7 @@ document.addEventListener('keyup', function(e) {
 });
 
 document.getElementById('btn-again').addEventListener('click', function() {
-  document.getElementById('lose').classList.add('hidden');
+  overlay.hide();
   audioSounds.pause();
   player.startPos();
   panel.lives = panel.fullLives;
