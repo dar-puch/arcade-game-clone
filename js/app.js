@@ -4,7 +4,7 @@ let Enemy = function() {
     this.sprite = 'images/enemy-bug.png';
     this.x = Math.floor(Math.random() * 250) - 300;
     this.factor = 0; //increases speed
-    this.speed = Math.floor(Math.random() * 30) + this.factor; //250
+    this.speed = Math.floor(Math.random() * 150) + this.factor;
     this.y = this.chooseRow();
 
 };
@@ -24,6 +24,7 @@ Enemy.prototype.update = function(dt) {
 
 }; //end Enemy update
 
+
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -33,9 +34,9 @@ Enemy.prototype.chooseRow = function(){ //put enemy on random row
   const random = Math.floor(Math.random() * 3);
   return rows[random];
 }
-Enemy.prototype.changeSpeed = function(){
-  this.factor += 50;
-  this.speed = Math.floor(Math.random() * 250) + this.factor;
+Enemy.prototype.changeSpeed = function(high){
+ high === 0 ? this.factor = 0 : this.factor += 50;
+  this.speed = Math.floor(Math.random() * 150) + this.factor;
 }
 // Now write your own player class
 // This class requires an update(), render() and
@@ -47,6 +48,7 @@ class Player {
     this.collisionCount = 0;
     this.winCount = 0;
     this.movesCount = 0;
+    this.freeze = false;
   }
 
 checkCollisions(pl) {
@@ -59,7 +61,7 @@ checkCollisions(pl) {
       panel.update();
       if (panel.lives === 0) {
         audioSounds.play('sounds/NFF-death-bell.mp3');
-        show('lose');
+        overlay.show('lose');
       }
     }
   });
@@ -82,10 +84,16 @@ checkWin() {
     this.startPos();
   panel.level++;
   panel.update();
+  if (panel.level === 3) {
+    audioSounds.play('sounds/NFF-mad-laughter.mp3')
+    overlay.show('win');
+  }
+  else {
   allEnemies.forEach(function(enemy){
-    enemy.changeSpeed();
-  })
+    enemy.changeSpeed(1);
 
+  })
+}
   }
 } //end checkWin
 
@@ -117,6 +125,7 @@ ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
   } //end handleInput
 
+
 }//end Player
 
 class Panel {
@@ -135,62 +144,37 @@ class Panel {
       heartsList.insertAdjacentHTML('afterbegin', '<li><img src="images/Heart-min.png" /></li>');
     }
     let levelNum = document.getElementById('level-num');
-    levelNum.innerText = this.level;
+    levelNum.innerText = this.level + ' of 10 ';
   }//end update
 
 } //end Panel
 
-function show(result) {
-  const element = document.getElementById('end');
-
-   if (result === 'win') {
-
-    element.getElementsByTagName('h1')[0].innerText = 'Congratulations! You have reached end of the game';
+ class Overlay {
+   constructor() {
+     this.element = document.getElementById('end');
+     this.h1 = '';
    }
-   else if (result === 'lose') {
-     element.getElementsByTagName('h1')[0].innerText = 'Out of lives!';
-     element.classList.add('lose');
-   }
-
-console.log("document.getElementById('end').getElementsByTagName('h1')[0].innerText:" + document.getElementById('end').getElementsByTagName('h1')[0].innerText);
-   text = 'Congratulations! You have reached end of the game';
-   console.log('result: ' + result);
-   element.classList.remove('hidden');
-}
-
-class Overlay {
-  constructor() {
-    this.element = document.getElementById('end');
-    this.text = this.element.getElementsByTagName('h1').innerText;
-
-  }
-
-  show(result) {
+   show(result) {
      if (result === 'win') {
-       this.text = 'Congratulations! You have reached end of the game';
+       this.h1 = 'Congratulations!';
+      this.element.classList.remove('lose');
+      this.element.classList.add('win');
      }
      else if (result === 'lose') {
-       this.text = 'Out of hives!';
+       this.h1 = 'Out of lives!';
+       this.element.classList.remove('win');
+       this.element.classList.add('lose');
      }
-     console.log('this.text:' + this.text);
-     console.log('this.text:' + this.text);
-     this.text = 'Congratulations! You have reached end of the game';
-     console.log('result: ' + result);
+  this.element.getElementsByTagName('h1')[0].innerText = this.h1;
      this.element.classList.remove('hidden');
-  }
-
-  hide() {
-    this.element.classList.add('hidden');
-  }
-}
-
-class Game {
-
-pause() {
-
-}
-
-}
+     player.freeze = true;
+     audioBcg.pause();
+   }
+   hide() {
+      this.element.classList.add('hidden');
+      player.freeze = false;
+   }
+ }
 
 class Audio {
   constructor(id) {
@@ -244,19 +228,22 @@ document.addEventListener('keyup', function(e) {
         40: 'down'
     };
 
+if (!player.freeze) { //freezed player can't move
     player.handleInput(allowedKeys[e.keyCode]);
+    }
 });
 
 document.getElementById('btn-again').addEventListener('click', function() {
   overlay.hide();
   audioSounds.pause();
+  audioBcg.play('sounds/POL-snowy-hill-short.mp3');
   player.startPos();
   panel.lives = panel.fullLives;
   panel.level = 1;
   panel.update();
-  allEnemies.forEach(function(enemy){
-    enemy.factor = 0;
-    enemy.changeSpeed();
+  allEnemies.forEach(function(enemy){ //resets position and speed of bugs
+    enemy.x = Math.floor(Math.random() * 250) - 300;
+    enemy.changeSpeed(0);
   })
 
 })
@@ -287,14 +274,3 @@ document.getElementById('sounds').addEventListener('click', function() {
     audioSounds.muted = false;
   }
 })
-
-/*
-audio = document.getElementById("audio");
-audio.src = "audio/wrong.mp3";
-audio.play();
-audio.pause();
-document.querySelector(".sound").addEventListener("click", function() {
-  let soundClassList = document.querySelector(".sound").classList;
-  soundClassList.toggle("muted");
-  soundClassList.contains("muted") ? audio.muted = true : audio.muted = false;
-});*/
