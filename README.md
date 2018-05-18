@@ -1,6 +1,26 @@
-frontend-nanodegree-arcade-game
-===============================
+# Wild Bugs
 
-Students should use this [rubric](https://review.udacity.com/#!/projects/2696458597/rubric) for self-checking their submission. Make sure the functions you write are **object-oriented** - either class functions (like Player and Enemy) or class prototype functions such as Enemy.prototype.checkCollisions, and that the keyword 'this' is used appropriately within your class and class prototype functions to refer to the object the function is called upon. Also be sure that the **readme.md** file is updated with your instructions on both how to 1. Run and 2. Play your arcade game.
+Classic arcade game clone, a frontend nanodegree project for Udacity
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
+## How to play
+
+Player's goal is to cross the street without being ran over by one of bugs and get to the next level. There are 10 levels and three lives (hearts). Player wins the game when he/she passes all 10 levels without losing all three hearts.
+
+## Demo
+http://www.puchweb.pl/bugs/
+
+## How to install
+
+Copy files and catalogues on your computer and open index.html in the browser.
+To install game on the server you need to copy files there.
+
+
+## Authors
+
+engine.js, resources.js and images were provided by Udacity, start code is here: https://github.com/udacity/frontend-nanodegree-arcade-game
+
+Then game was developed by me (Daria Puch).
+
+Background Music by PlayOnLoop.com
+Licensed under Creative Commons By Attribution 4.0
+Other sounds by NoiseForFun.com under CC-BY-ND 3.0 Attribution
